@@ -27,7 +27,7 @@
 			// マジでイケてる感じにCesiumのアセットパスを設定！
 			if (typeof window !== 'undefined') {
 				window.CESIUM_BASE_URL = new URL(
-					'../../@TakamuneSuda/svecium/cesium',
+					'../../@TakamuneSuda/svecium/cesium/dist',
 					import.meta.url
 				).href;
 			}
