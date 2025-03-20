@@ -26,7 +26,10 @@
 		try {
 			// マジでイケてる感じにCesiumのアセットパスを設定！
 			if (typeof window !== 'undefined') {
-				window.CESIUM_BASE_URL = new URL('@TakamuneSuda/svecium/cesium', import.meta.url).href;
+				window.CESIUM_BASE_URL = new URL(
+					'../../@TakamuneSuda/svecium/cesium',
+					import.meta.url
+				).href;
 			}
 
 			// マジでイケてる感じにビューアーを初期化！
