@@ -26,10 +26,7 @@
 		try {
 			// マジでイケてる感じにCesiumのアセットパスを設定！
 			if (typeof window !== 'undefined') {
-				window.CESIUM_BASE_URL = new URL('svecium/cesium/', import.meta.url).href.replace(
-					/\/index.js$/,
-					'/'
-				);
+				window.CESIUM_BASE_URL = './cesium';
 			}
 
 			// マジでイケてる感じにビューアーを初期化！
