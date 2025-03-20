@@ -1,6 +1,6 @@
 {
 	"name": "@TakamuneSuda/svecium",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"description": "CesiumJS wrapper for Svelte",
 	"keywords": [
 		"svelte",
