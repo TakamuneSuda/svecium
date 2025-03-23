@@ -1,9 +1,6 @@
 // Components
-export { default as CesiumViewer } from './components/CesiumViewer.svelte';
+export { default as Viewer } from './components/Viewer.svelte';
+export { default as Imagery } from './components/Imagery.svelte';
 
-// Types and Utils
-export {
-    CESIUM_INITIAL_OPTIONS,
-    type CameraPosition,
-    type CesiumContext
-} from './utils/cesiumUtils.js';
+// Context
+export { type MapContext } from './contexts.svelte.js';

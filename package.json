@@ -1,6 +1,6 @@
 {
 	"name": "@TakamuneSuda/svecium",
-	"version": "0.0.7",
+	"version": "0.0.9",
 	"description": "CesiumJS wrapper for Svelte",
 	"keywords": [
 		"svelte",
@@ -17,7 +17,7 @@
 	},
 	"scripts": {
 		"dev": "vite dev",
-		"build": "svelte-package && node scripts/copy-cesium-assets.js",
+		"build": "svelte-package",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
@@ -28,8 +28,7 @@
 	"files": [
 		"dist",
 		"!dist/**/*.test.*",
-		"!dist/**/*.spec.*",
-		"dist/cesium"
+		"!dist/**/*.spec.*"
 	],
 	"sideEffects": [
 		"**/*.css"
@@ -42,15 +41,11 @@
 			"types": "./dist/index.d.ts",
 			"svelte": "./dist/index.js",
 			"default": "./dist/index.js"
-		},
-		"./cesium": "./dist/cesium"
+		}
 	},
 	"peerDependencies": {
-		"cesium": "^1.127.0",
-		"svelte": "^5.0.0"
-	},
-	"dependencies": {
-		"cesium": "^1.127.0"
+		"cesium": "^1.x",
+		"svelte": "^5.x"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
@@ -59,6 +54,7 @@
 		"@sveltejs/kit": "^2.16.0",
 		"@sveltejs/package": "^2.3.10",
 		"@sveltejs/vite-plugin-svelte": "^5.0.0",
+		"cesium": "^1.127.0",
 		"eslint": "^9.18.0",
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-svelte": "^3.0.0",
