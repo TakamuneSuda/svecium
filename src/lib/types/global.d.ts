@@ -1,2 +1,2 @@
 // Global type definitions
-declare const CESIUM_BASE_URL: string;
+declare const CESIUM_BASE_URL: string | undefined;

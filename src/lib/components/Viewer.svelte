@@ -13,6 +13,7 @@
 	const mapCtx = prepareMapContext();
 
 	onMount(() => {
+		// eslint-disable-next-line no-undef
 		if (!CESIUM_BASE_URL) {
 			console.warn(
 				"CESIUM_BASE_URL is not defined. May be failed to load cesium. Make sure to define it in your environment variables to load cesium's assets."
