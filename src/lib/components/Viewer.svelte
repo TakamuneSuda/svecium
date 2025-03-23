@@ -1,10 +1,15 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { Viewer } from 'cesium';
+	import { Viewer, Ion } from 'cesium';
 	import { prepareMapContext } from '$lib/contexts.svelte';
 
 	// Load Cesium styles
 	import 'cesium/Build/Cesium/Widgets/widgets.css';
+
+	// Props
+	const { ionToken } = $props<{
+		ionToken?: string;
+	}>();
 
 	let container: HTMLDivElement;
 	let viewer: Viewer | null = null;
@@ -13,6 +18,9 @@
 	const mapCtx = prepareMapContext();
 
 	onMount(() => {
+		// Initialize Cesium Ion
+		Ion.defaultAccessToken = ionToken;
+
 		// eslint-disable-next-line no-undef
 		if (!CESIUM_BASE_URL) {
 			console.warn(
