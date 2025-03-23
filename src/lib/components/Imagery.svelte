@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { onDestroy } from 'svelte';
-	import { UrlTemplateImageryProvider, ImageryLayer } from 'cesium';
+	import { UrlTemplateImageryProvider } from 'cesium';
 	import { getMapContext } from '$lib/contexts.svelte';
 
 	// Props
@@ -16,9 +15,6 @@
 
 	// Get map context
 	const mapCtx = getMapContext();
-
-	// Layer instance
-	let layer: ImageryLayer | null = null;
 
 	$effect(() => {
 		const viewer = mapCtx.viewer;
@@ -36,22 +32,6 @@
 		});
 
 		// Add layer to viewer
-		layer = viewer.imageryLayers.addImageryProvider(provider);
-
-		// Cleanup when effect is re-run
-		return () => {
-			if (layer) {
-				viewer.imageryLayers.remove(layer);
-				layer = null;
-			}
-		};
-	});
-
-	// Cleanup on component destroy
-	onDestroy(() => {
-		if (layer && mapCtx.viewer) {
-			mapCtx.viewer.imageryLayers.remove(layer);
-			layer = null;
-		}
+		viewer.imageryLayers.addImageryProvider(provider);
 	});
 </script>
