@@ -16,10 +16,7 @@
 		if (!viewer) return;
 
 		try {
-			const terrainProvider = await CesiumTerrainProvider.fromUrl(
-				await IonResource.fromAssetId(id, {})
-			);
-			viewer.terrainProvider = terrainProvider;
+			viewer.terrainProvider = await CesiumTerrainProvider.fromUrl(IonResource.fromAssetId(id, {}));
 		} catch (error) {
 			console.error('Failed to setup terrain provider:', error);
 		}
