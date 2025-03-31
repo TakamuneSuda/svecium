@@ -4,13 +4,20 @@
 
 	// Props with default values
 	let {
-		longitude = undefined,
-		latitude = undefined,
-		height = undefined,
-		heading = undefined,
-		pitch = undefined,
-		roll = undefined
-	} = $props();
+		longitude = $bindable(0),
+		latitude = $bindable(0),
+		height = $bindable(1000),
+		heading = $bindable(0),
+		pitch = $bindable(-90),
+		roll = $bindable(0)
+	} = $props<{
+		longitude?: number;
+		latitude?: number;
+		height?: number;
+		heading?: number;
+		pitch?: number;
+		roll?: number;
+	}>();
 
 	// Get map context
 	const mapCtx = getMapContext();
@@ -60,10 +67,10 @@
 		};
 
 		// Update camera if properties have changed
-		if (!isUpdating && longitude !== undefined && latitude !== undefined) {
+		if (!isUpdating) {
 			isUpdating = true;
-			const destination = Cartesian3.fromDegrees(longitude, latitude, height ?? 1000);
-			const orientation = HeadingPitchRoll.fromDegrees(heading ?? 0, pitch ?? -90, roll ?? 0);
+			const destination = Cartesian3.fromDegrees(longitude, latitude, height);
+			const orientation = HeadingPitchRoll.fromDegrees(heading, pitch, roll);
 
 			camera.setView({
 				destination,

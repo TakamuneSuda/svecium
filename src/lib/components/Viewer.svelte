@@ -1,18 +1,20 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Viewer, Ion } from 'cesium';
+	import type { Snippet } from 'svelte';
 	import { prepareMapContext } from '$lib/contexts.svelte';
 
 	// Load Cesium styles
 	import 'cesium/Build/Cesium/Widgets/widgets.css';
 
 	// Props
-	const { ionToken } = $props<{
+	const { ionToken, children } = $props<{
 		ionToken?: string;
+		children?: Snippet<[Viewer]>; // OK
 	}>();
 
 	let container: HTMLDivElement;
-	let viewer: Viewer | null = null;
+	let viewer: Viewer | null = $state(null);
 
 	// Setup map context
 	const mapCtx = prepareMapContext();
@@ -45,5 +47,7 @@
 </script>
 
 <div bind:this={container}>
-	<slot />
+    {#if viewer}
+        {@render children?.(viewer)}
+    {/if}
 </div>
