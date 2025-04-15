@@ -79,8 +79,6 @@
 			isUpdating = false;
 		}
 
-		console.log('Setting up camera event listeners');
-
 		// Add camera.changed event listener
 		camera.changed.addEventListener(updateCameraState);
 
@@ -89,7 +87,6 @@
 
 		// Clean up function to return
 		return () => {
-			console.log('Cleaning up camera event listeners');
 			camera.changed.removeEventListener(updateCameraState);
 			viewer.scene.preRender.removeEventListener(updateCameraState);
 		};
