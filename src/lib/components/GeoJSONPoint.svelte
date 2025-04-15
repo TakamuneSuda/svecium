@@ -1,9 +1,21 @@
 <script lang="ts">
-	import { GeoJsonDataSource, Color, Entity, Cartesian3, Cartesian2, BillboardGraphics, ColorMaterialProperty, PointGraphics, HeightReference } from 'cesium';
+	import {
+		GeoJsonDataSource,
+		Color,
+		Entity,
+		Cartesian2,
+		BillboardGraphics,
+		ColorMaterialProperty,
+		PointGraphics,
+		HeightReference
+	} from 'cesium';
 	import { getMapContext } from '$lib/contexts.svelte';
-	import type { PointStyle, GeoJSONPointProps, Point, Feature, FeatureCollection } from '$lib/types';
-
-	type $$Props = GeoJSONPointProps;
+	import type {
+		PointStyle,
+		Point,
+		Feature,
+		FeatureCollection
+	} from '$lib/types';
 
 	// Props
 	let {
@@ -56,7 +68,10 @@
 								width: style.imageWidth,
 								height: style.imageHeight,
 								// use pointSize as scale if width and height are not specified
-								scale: !style.imageWidth && !style.imageHeight ? (style.pointSize || 10) / 10 : undefined,
+								scale:
+									!style.imageWidth && !style.imageHeight
+										? (style.pointSize || 10) / 10
+										: undefined,
 								color: Color.fromCssColorString(style.color || '#4169e1').withAlpha(
 									style.opacity || 1
 								),
@@ -66,7 +81,9 @@
 								verticalOrigin: style.anchorY ?? 0.5,
 								horizontalOrigin: style.anchorX ?? 0.5,
 								// clamp to ground
-								heightReference: clampToGround ? HeightReference.CLAMP_TO_GROUND : HeightReference.NONE,
+								heightReference: clampToGround
+									? HeightReference.CLAMP_TO_GROUND
+									: HeightReference.NONE,
 								// height offset
 								pixelOffset: heightOffset ? new Cartesian2(0, heightOffset) : undefined
 							});
@@ -75,16 +92,20 @@
 						} else {
 							// default point style
 							entity.point = new PointGraphics({
-								color: new ColorMaterialProperty(Color.fromCssColorString(style.color || '#4169e1').withAlpha(
-									style.opacity || 1
-								)),
+								color: new ColorMaterialProperty(
+									Color.fromCssColorString(style.color || '#4169e1').withAlpha(style.opacity || 1)
+								),
 								pixelSize: style.pointSize || 10,
 								outlineColor: style.outlineWidth
-									? new ColorMaterialProperty(Color.fromCssColorString(style.outlineColor || '#000000'))
+									? new ColorMaterialProperty(
+											Color.fromCssColorString(style.outlineColor || '#000000')
+										)
 									: undefined,
 								outlineWidth: style.outlineWidth || 0,
 								// clamp to ground
-								heightReference: style.clampToGround ? HeightReference.CLAMP_TO_GROUND : HeightReference.NONE
+								heightReference: style.clampToGround
+									? HeightReference.CLAMP_TO_GROUND
+									: HeightReference.NONE
 							});
 						}
 					}

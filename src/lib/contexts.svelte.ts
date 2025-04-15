@@ -17,7 +17,7 @@ class CesiumContext<T> {
 }
 
 // Map context
-export class MapContext extends CesiumContext<Viewer> { }
+export class MapContext extends CesiumContext<Viewer> {}
 
 export function prepareMapContext(): MapContext {
 	const mapCtx = new MapContext();
