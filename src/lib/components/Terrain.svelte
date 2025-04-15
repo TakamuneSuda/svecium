@@ -2,10 +2,10 @@
 	import { getMapContext } from '$lib/contexts.svelte';
 	import { CesiumTerrainProvider, IonResource } from 'cesium';
 
+	import type { TerrainProps } from '$lib/types';
+
 	// Props
-	const { assetId } = $props<{
-		assetId?: number;
-	}>();
+	const { assetId } = $props() satisfies TerrainProps;
 
 	// Get map context
 	const mapCtx = getMapContext();

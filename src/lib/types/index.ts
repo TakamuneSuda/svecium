@@ -1,3 +1,6 @@
+import type { Viewer } from 'cesium';
+import type { Snippet } from 'svelte';
+
 // GeoJSON types
 export interface Point {
     type: 'Point';
@@ -21,7 +24,25 @@ export interface LineString {
     coordinates: Array<[number, number] | [number, number, number]>;
 }
 
-// Component props types
+// Component Props Types
+export interface ViewerProps {
+    ionToken?: string;
+    children?: Snippet<[Viewer]>;
+}
+
+export interface CameraProps {
+    longitude?: number;
+    latitude?: number;
+    height?: number;
+    heading?: number;
+    pitch?: number;
+    roll?: number;
+}
+
+export interface TerrainProps {
+    assetId?: number;
+}
+
 export interface GeoJSONPointProps {
     data?: FeatureCollection<Point> | Feature<Point> | null;
     style?: PointStyle;

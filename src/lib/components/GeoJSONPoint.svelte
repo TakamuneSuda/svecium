@@ -45,35 +45,35 @@
 		dataSource
 			.load(pointFeatures)
 			.then(() => {
-				// カスタマイズ各ポイントのスタイル
+				// customize point styles
 				dataSource.entities.values.forEach((entity: Entity) => {
 					if (entity.position) {
-						// 画像URLが指定されている場合はBillboardを使用
+						// use billboard for point image
 						if (style.pointImage) {
 							entity.billboard = new BillboardGraphics({
 								image: style.pointImage,
-								// 幅と高さが指定されている場合は、それを使用
+								// use specified width and height if provided
 								width: style.imageWidth,
 								height: style.imageHeight,
-								// 幅と高さが指定されていない場合は、pointSizeをスケールとして使用
+								// use pointSize as scale if width and height are not specified
 								scale: !style.imageWidth && !style.imageHeight ? (style.pointSize || 10) / 10 : undefined,
 								color: Color.fromCssColorString(style.color || '#4169e1').withAlpha(
 									style.opacity || 1
 								),
-								// 回転角度（度数法）
+								// rotation angle (degrees)
 								rotation: style.rotation ? (style.rotation * Math.PI) / 180 : 0,
-								// アンカーポイント（デフォルトは中心）
+								// anchor point (default is center)
 								verticalOrigin: style.anchorY ?? 0.5,
 								horizontalOrigin: style.anchorX ?? 0.5,
-								// 地表面への固定
+								// clamp to ground
 								heightReference: clampToGround ? HeightReference.CLAMP_TO_GROUND : HeightReference.NONE,
-								// 高さオフセット
+								// height offset
 								pixelOffset: heightOffset ? new Cartesian2(0, heightOffset) : undefined
 							});
-							// デフォルトのポイントを非表示に
+							// hide default point
 							entity.point = undefined;
 						} else {
-							// 通常のポイントスタイル
+							// default point style
 							entity.point = new PointGraphics({
 								color: new ColorMaterialProperty(Color.fromCssColorString(style.color || '#4169e1').withAlpha(
 									style.opacity || 1
@@ -83,7 +83,7 @@
 									? new ColorMaterialProperty(Color.fromCssColorString(style.outlineColor || '#000000'))
 									: undefined,
 								outlineWidth: style.outlineWidth || 0,
-								// 地表面への固定
+								// clamp to ground
 								heightReference: style.clampToGround ? HeightReference.CLAMP_TO_GROUND : HeightReference.NONE
 							});
 						}

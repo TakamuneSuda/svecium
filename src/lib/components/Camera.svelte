@@ -2,6 +2,8 @@
 	import { getMapContext } from '$lib/contexts.svelte';
 	import { Cartesian3, Math as CesiumMath, HeadingPitchRoll } from 'cesium';
 
+	import type { CameraProps } from '$lib/types';
+
 	// Props with default values
 	let {
 		longitude = $bindable(0),
@@ -10,14 +12,7 @@
 		heading = $bindable(0),
 		pitch = $bindable(-90),
 		roll = $bindable(0)
-	} = $props<{
-		longitude?: number;
-		latitude?: number;
-		height?: number;
-		heading?: number;
-		pitch?: number;
-		roll?: number;
-	}>();
+	} = $props() satisfies CameraProps;
 
 	// Get map context
 	const mapCtx = getMapContext();

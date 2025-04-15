@@ -1,17 +1,15 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Viewer, Ion } from 'cesium';
-	import type { Snippet } from 'svelte';
 	import { prepareMapContext } from '$lib/contexts.svelte';
 
 	// Load Cesium styles
 	import 'cesium/Build/Cesium/Widgets/widgets.css';
 
+	import type { ViewerProps } from '$lib/types';
+
 	// Props
-	const { ionToken, children } = $props<{
-		ionToken?: string;
-		children?: Snippet<[Viewer]>; // OK
-	}>();
+	let { ionToken = '', children } = $props() satisfies ViewerProps;
 
 	let container: HTMLDivElement;
 	let viewer: Viewer | null = $state(null);
@@ -47,7 +45,7 @@
 </script>
 
 <div bind:this={container}>
-    {#if viewer}
-        {@render children?.(viewer)}
-    {/if}
+	{#if viewer}
+		{@render children?.(viewer)}
+	{/if}
 </div>
