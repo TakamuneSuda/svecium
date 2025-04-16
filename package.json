@@ -72,5 +72,8 @@
 		"onlyBuiltDependencies": [
 			"esbuild"
 		]
+	},
+	"dependencies": {
+		"cesium-mvt-imagery-provider": "^1.4.1"
 	}
 }
