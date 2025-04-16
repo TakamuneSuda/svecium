@@ -24,10 +24,6 @@
 	let {
 		data = $bindable<FeatureCollection<Polygon> | Feature<Polygon> | null>(null),
 		style = $bindable<PolygonStyle>({
-			color: '#ff0000',
-			opacity: 0.5,
-			outlineColor: '#ffffff',
-			outlineWidth: 2,
 			fillColor: '#ff0000',
 			fillOpacity: 0.5
 		})
@@ -57,11 +53,9 @@
 		// Load GeoJSON data
 		dataSource
 			.load(polygonFeatures, {
-				fill: Color.fromCssColorString(style.fillColor || style.color || '#ff0000').withAlpha(
-					style.fillOpacity || style.opacity || 0.5
+				fill: Color.fromCssColorString(style.fillColor || '#ff0000').withAlpha(
+					style.fillOpacity || 0.5
 				),
-				stroke: Color.fromCssColorString(style.outlineColor || style.color || '#ffffff'),
-				strokeWidth: style.outlineWidth || 2,
 				clampToGround: true
 			})
 			.then(() => {

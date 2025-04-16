@@ -10,12 +10,7 @@
 		HeightReference
 	} from 'cesium';
 	import { getMapContext } from '$lib/contexts.svelte';
-	import type {
-		PointStyle,
-		Point,
-		Feature,
-		FeatureCollection
-	} from '$lib/types';
+	import type { PointStyle, Point, Feature, FeatureCollection } from '$lib/types';
 
 	// Props
 	let {
@@ -72,9 +67,16 @@
 									!style.imageWidth && !style.imageHeight
 										? (style.pointSize || 10) / 10
 										: undefined,
-								color: Color.fromCssColorString(style.color || '#4169e1').withAlpha(
-									style.opacity || 1
-								),
+								color: style.color
+									? (() => {
+										try {
+											return Color.fromCssColorString(style.color).withAlpha(style.opacity || 1);
+										} catch (e) {
+											console.warn(`Invalid color: ${style.color}`);
+											return undefined;
+										}
+									})()
+									: undefined,
 								// rotation angle (degrees)
 								rotation: style.rotation ? (style.rotation * Math.PI) / 180 : 0,
 								// anchor point (default is center)
@@ -92,14 +94,30 @@
 						} else {
 							// default point style
 							entity.point = new PointGraphics({
-								color: new ColorMaterialProperty(
-									Color.fromCssColorString(style.color || '#4169e1').withAlpha(style.opacity || 1)
-								),
+								color: style.color
+								? (() => {
+									try {
+										return new ColorMaterialProperty(
+											Color.fromCssColorString(style.color).withAlpha(style.opacity || 1)
+										);
+									} catch (e) {
+										console.warn(`Invalid color: ${style.color}`);
+										return undefined;
+									}
+								})()
+								: undefined,
 								pixelSize: style.pointSize || 10,
 								outlineColor: style.outlineWidth
-									? new ColorMaterialProperty(
-											Color.fromCssColorString(style.outlineColor || '#000000')
-										)
+									? (() => {
+										try {
+											return new ColorMaterialProperty(
+												Color.fromCssColorString(style.outlineColor || '#000000')
+											);
+										} catch (e) {
+											console.warn(`Invalid outline color: ${style.outlineColor}`);
+											return undefined;
+										}
+									})()
 									: undefined,
 								outlineWidth: style.outlineWidth || 0,
 								// clamp to ground
