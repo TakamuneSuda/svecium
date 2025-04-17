@@ -36,12 +36,11 @@ jobs:
       - name: Build package
         run: pnpm build
 
-  publish-gpr:
+  publish-npm:
     needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      packages: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -56,7 +55,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          registry-url: https://npm.pkg.github.com/
 
       - name: Install dependencies
         run: pnpm install --no-frozen-lockfile
