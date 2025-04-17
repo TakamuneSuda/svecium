@@ -1,6 +1,6 @@
 {
 	"name": "@takamunesuda/svecium",
-	"version": "0.0.2",
+	"version": "0.0.10",
 	"description": "A Svelte component library for CesiumJS.",
 	"keywords": [
 		"svelte",
