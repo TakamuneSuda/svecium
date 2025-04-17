@@ -2,15 +2,17 @@
 	import { getMapContext } from '$lib/contexts.svelte';
 	import { Cartesian3, Math as CesiumMath, HeadingPitchRoll } from 'cesium';
 
+	import type { CameraProps } from '$lib/types';
+
 	// Props with default values
 	let {
-		longitude = undefined,
-		latitude = undefined,
-		height = undefined,
-		heading = undefined,
-		pitch = undefined,
-		roll = undefined
-	} = $props();
+		longitude = $bindable(0),
+		latitude = $bindable(0),
+		height = $bindable(1000),
+		heading = $bindable(0),
+		pitch = $bindable(-90),
+		roll = $bindable(0)
+	} = $props() satisfies CameraProps;
 
 	// Get map context
 	const mapCtx = getMapContext();
@@ -60,10 +62,10 @@
 		};
 
 		// Update camera if properties have changed
-		if (!isUpdating && longitude !== undefined && latitude !== undefined) {
+		if (!isUpdating) {
 			isUpdating = true;
-			const destination = Cartesian3.fromDegrees(longitude, latitude, height ?? 1000);
-			const orientation = HeadingPitchRoll.fromDegrees(heading ?? 0, pitch ?? -90, roll ?? 0);
+			const destination = Cartesian3.fromDegrees(longitude, latitude, height);
+			const orientation = HeadingPitchRoll.fromDegrees(heading, pitch, roll);
 
 			camera.setView({
 				destination,
@@ -71,8 +73,6 @@
 			});
 			isUpdating = false;
 		}
-
-		console.log('Setting up camera event listeners');
 
 		// Add camera.changed event listener
 		camera.changed.addEventListener(updateCameraState);
@@ -82,7 +82,6 @@
 
 		// Clean up function to return
 		return () => {
-			console.log('Cleaning up camera event listeners');
 			camera.changed.removeEventListener(updateCameraState);
 			viewer.scene.preRender.removeEventListener(updateCameraState);
 		};

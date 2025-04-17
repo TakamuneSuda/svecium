@@ -6,13 +6,13 @@
 	// Load Cesium styles
 	import 'cesium/Build/Cesium/Widgets/widgets.css';
 
+	import type { ViewerProps } from '$lib/types';
+
 	// Props
-	const { ionToken } = $props<{
-		ionToken?: string;
-	}>();
+	let { ionToken = '', children } = $props() satisfies ViewerProps;
 
 	let container: HTMLDivElement;
-	let viewer: Viewer | null = null;
+	let viewer: Viewer | null = $state(null);
 
 	// Setup map context
 	const mapCtx = prepareMapContext();
@@ -45,5 +45,7 @@
 </script>
 
 <div bind:this={container}>
-	<slot />
+	{#if viewer}
+		{@render children?.(viewer)}
+	{/if}
 </div>

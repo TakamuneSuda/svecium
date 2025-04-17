@@ -1,19 +1,19 @@
 {
-	"name": "@TakamuneSuda/svecium",
-	"version": "0.0.9",
-	"description": "CesiumJS wrapper for Svelte",
+	"name": "@takamunesuda/svecium",
+	"version": "0.0.2",
+	"description": "A Svelte component library for CesiumJS.",
 	"keywords": [
 		"svelte",
 		"cesium",
-		"gis",
 		"3d",
-		"map"
+		"map",
+		"globe"
 	],
-	"author": "Your Name",
+	"author": "Takamune Suda",
 	"license": "MIT",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/yourusername/svecium"
+		"url": "https://github.com/takamunesuda/svecium"
 	},
 	"scripts": {
 		"dev": "vite dev",
@@ -72,5 +72,8 @@
 		"onlyBuiltDependencies": [
 			"esbuild"
 		]
+	},
+	"dependencies": {
+		"cesium-mvt-imagery-provider": "^1.4.1"
 	}
 }
