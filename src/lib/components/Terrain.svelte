@@ -5,7 +5,7 @@
 	import type { TerrainProps } from '$lib/types';
 
 	// Props
-	const { assetId } = $props() satisfies TerrainProps;
+	const { assetId } = $props<{ assetId?: TerrainProps }>();
 
 	// Get map context
 	const mapCtx = getMapContext();

@@ -1,25 +1,26 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, type Snippet } from 'svelte';
 	import { Viewer, Ion } from 'cesium';
 	import { prepareMapContext } from '$lib/contexts.svelte';
-
-	// Load Cesium styles
 	import 'cesium/Build/Cesium/Widgets/widgets.css';
 
-	import type { ViewerProps } from '$lib/types';
+	type ViewerConstructorOptions = ConstructorParameters<typeof Viewer>[1];
 
-	// Props
-	let { ionToken = '', children } = $props() satisfies ViewerProps;
+	type Props = {
+		ionToken?: string;
+		children?: Snippet<[viewer: Viewer]>;
+	} & Omit<ViewerConstructorOptions, 'container'>;
 
+	let { ionToken = '', children, ...viewerOptions }: Props = $props();
 	let container: HTMLDivElement;
 	let viewer: Viewer | null = $state(null);
-
-	// Setup map context
 	const mapCtx = prepareMapContext();
 
 	onMount(() => {
 		// Initialize Cesium Ion
-		Ion.defaultAccessToken = ionToken;
+		if (ionToken) {
+			Ion.defaultAccessToken = ionToken;
+		}
 
 		// eslint-disable-next-line no-undef
 		if (!CESIUM_BASE_URL) {
@@ -29,9 +30,10 @@
 		}
 
 		// Initialize Cesium viewer
-		viewer = new Viewer(container);
+		const initialOptions = $state.snapshot(viewerOptions);
 
-		// Set the viewer instance to the context
+		viewer = new Viewer(container, initialOptions);
+
 		mapCtx.viewer = viewer;
 
 		return () => {
@@ -44,8 +46,8 @@
 	});
 </script>
 
-<div bind:this={container}>
-	{#if viewer}
-		{@render children?.(viewer)}
+<div bind:this={container} class="cesium-viewer-container">
+	{#if viewer && children}
+		{@render children(viewer)}
 	{/if}
 </div>

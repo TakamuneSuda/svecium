@@ -69,13 +69,8 @@
 										: undefined,
 								color: style.color
 									? (() => {
-										try {
 											return Color.fromCssColorString(style.color).withAlpha(style.opacity || 1);
-										} catch (e) {
-											console.warn(`Invalid color: ${style.color}`);
-											return undefined;
-										}
-									})()
+										})()
 									: undefined,
 								// rotation angle (degrees)
 								rotation: style.rotation ? (style.rotation * Math.PI) / 180 : 0,
@@ -95,29 +90,19 @@
 							// default point style
 							entity.point = new PointGraphics({
 								color: style.color
-								? (() => {
-									try {
-										return new ColorMaterialProperty(
-											Color.fromCssColorString(style.color).withAlpha(style.opacity || 1)
-										);
-									} catch (e) {
-										console.warn(`Invalid color: ${style.color}`);
-										return undefined;
-									}
-								})()
-								: undefined,
+									? (() => {
+											return new ColorMaterialProperty(
+												Color.fromCssColorString(style.color).withAlpha(style.opacity || 1)
+											);
+										})()
+									: undefined,
 								pixelSize: style.pointSize || 10,
 								outlineColor: style.outlineWidth
 									? (() => {
-										try {
 											return new ColorMaterialProperty(
 												Color.fromCssColorString(style.outlineColor || '#000000')
 											);
-										} catch (e) {
-											console.warn(`Invalid outline color: ${style.outlineColor}`);
-											return undefined;
-										}
-									})()
+										})()
 									: undefined,
 								outlineWidth: style.outlineWidth || 0,
 								// clamp to ground

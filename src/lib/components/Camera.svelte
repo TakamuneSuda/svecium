@@ -2,9 +2,7 @@
 	import { getMapContext } from '$lib/contexts.svelte';
 	import { Cartesian3, Math as CesiumMath, HeadingPitchRoll } from 'cesium';
 
-	import type { CameraProps } from '$lib/types';
-
-	// Props with default values
+	// 個別のプロパティとして定義
 	let {
 		longitude = $bindable(0),
 		latitude = $bindable(0),
@@ -12,11 +10,12 @@
 		heading = $bindable(0),
 		pitch = $bindable(-90),
 		roll = $bindable(0)
-	} = $props() satisfies CameraProps;
+	} = $props();
 
 	// Get map context
 	const mapCtx = getMapContext();
 
+	// Update camera when position or orientation changes
 	$effect(() => {
 		const viewer = mapCtx.viewer;
 		if (!viewer) return;
@@ -24,66 +23,49 @@
 		const camera = viewer.camera;
 		let isUpdating = false;
 
-		// update camera state
-		const updateCameraState = () => {
+		// Update camera position and orientation
+		const updateCamera = () => {
 			if (isUpdating) return;
 			isUpdating = true;
 
-			const cartographic = camera.positionCartographic;
-			// Get current camera state
-			const currentLongitude = Number(CesiumMath.toDegrees(cartographic.longitude).toFixed(6));
-			const currentLatitude = Number(CesiumMath.toDegrees(cartographic.latitude).toFixed(6));
-			const currentHeight = Number(cartographic.height.toFixed(6));
-			const currentHeading = Number(CesiumMath.toDegrees(camera.heading).toFixed(6));
-			const currentPitch = Number(CesiumMath.toDegrees(camera.pitch).toFixed(6));
-			const currentRoll = Number(CesiumMath.toDegrees(camera.roll).toFixed(6));
-
-			// Update only if values have changed
-			if (Math.abs(currentLongitude - (longitude ?? 0)) > 0.000001) {
-				longitude = currentLongitude;
-			}
-			if (Math.abs(currentLatitude - (latitude ?? 0)) > 0.000001) {
-				latitude = currentLatitude;
-			}
-			if (Math.abs(currentHeight - (height ?? 0)) > 0.01) {
-				height = currentHeight;
-			}
-			if (Math.abs(currentHeading - (heading ?? 0)) > 0.01) {
-				heading = currentHeading;
-			}
-			if (Math.abs(currentPitch - (pitch ?? -90)) > 0.001) {
-				pitch = currentPitch;
-			}
-			if (Math.abs(currentRoll - (roll ?? 0)) > 0.01) {
-				roll = currentRoll;
-			}
-
-			isUpdating = false;
-		};
-
-		// Update camera if properties have changed
-		if (!isUpdating) {
-			isUpdating = true;
-			const destination = Cartesian3.fromDegrees(longitude, latitude, height);
-			const orientation = HeadingPitchRoll.fromDegrees(heading, pitch, roll);
+			const destination = Cartesian3.fromDegrees(longitude ?? 0, latitude ?? 0, height ?? 1000);
+			const orientation = HeadingPitchRoll.fromDegrees(heading ?? 0, pitch ?? -90, roll ?? 0);
 
 			camera.setView({
 				destination,
 				orientation
 			});
+
 			isUpdating = false;
-		}
+		};
 
-		// Add camera.changed event listener
-		camera.changed.addEventListener(updateCameraState);
+		// Update state from camera
+		const updateState = () => {
+			if (isUpdating) return;
+			isUpdating = true;
 
-		// Add scene preRender event listener
-		viewer.scene.preRender.addEventListener(updateCameraState);
+			const cartographic = camera.positionCartographic;
+			longitude = Number(CesiumMath.toDegrees(cartographic.longitude).toFixed(6));
+			latitude = Number(CesiumMath.toDegrees(cartographic.latitude).toFixed(6));
+			height = Number(cartographic.height.toFixed(6));
+			heading = Number(CesiumMath.toDegrees(camera.heading).toFixed(6));
+			pitch = Number(CesiumMath.toDegrees(camera.pitch).toFixed(6));
+			roll = Number(CesiumMath.toDegrees(camera.roll).toFixed(6));
 
-		// Clean up function to return
+			isUpdating = false;
+		};
+
+		// Initial update
+		updateCamera();
+
+		// Add listeners
+		camera.changed.addEventListener(updateState);
+		viewer.scene.preRender.addEventListener(updateState);
+
+		// Clean up
 		return () => {
-			camera.changed.removeEventListener(updateCameraState);
-			viewer.scene.preRender.removeEventListener(updateCameraState);
+			camera.changed.removeEventListener(updateState);
+			viewer.scene.preRender.removeEventListener(updateState);
 		};
 	});
 </script>

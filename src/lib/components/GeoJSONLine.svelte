@@ -1,12 +1,7 @@
 <script lang="ts">
 	import { GeoJsonDataSource, Color, Cartesian3, Cartographic } from 'cesium';
 	import { getMapContext } from '$lib/contexts.svelte';
-	import type {
-		LineStyle,
-		LineString,
-		Feature,
-		FeatureCollection
-	} from '$lib/types';
+	import type { LineStyle, LineString, Feature, FeatureCollection } from '$lib/types';
 
 	// Props
 	let {
