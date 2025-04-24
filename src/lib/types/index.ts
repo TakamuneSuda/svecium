@@ -1,12 +1,23 @@
 import type { Viewer } from 'cesium';
 import type { Snippet } from 'svelte';
 
-// GeoJSON types
+// GeoJSON Geometry types
 export interface Point {
 	type: 'Point';
 	coordinates: [number, number] | [number, number, number];
 }
 
+export interface LineString {
+	type: 'LineString';
+	coordinates: Array<[number, number] | [number, number, number]>;
+}
+
+export interface Polygon {
+	type: 'Polygon';
+	coordinates: Array<Array<[number, number] | [number, number, number]>>;
+}
+
+// GeoJSON Feature types
 export interface Feature<G = any> {
 	type: 'Feature';
 	geometry: G;
@@ -17,8 +28,6 @@ export interface FeatureCollection<G = any> {
 	type: 'FeatureCollection';
 	features: Array<Feature<G>>;
 }
-
-// GeoJSON Geometry types
 export interface LineString {
 	type: 'LineString';
 	coordinates: Array<[number, number] | [number, number, number]>;
@@ -62,13 +71,24 @@ export interface GeoJSONPointProps {
 	style?: PointStyle;
 	clampToGround?: boolean;
 	heightOffset?: number;
+	show?: boolean;
 }
 
 export interface GeoJSONLineProps {
-	data?: FeatureCollection<LineString> | Feature<LineString> | null;
-	style?: LineStyle;
+	data: FeatureCollection<LineString> | Feature<LineString>;
+	color?: string;
+	opacity?: number;
+	lineWidth?: number;
 	clampToGround?: boolean;
 	heightOffset?: number;
+	show?: boolean;
+}
+
+export interface GeoJSONPolygonProps {
+	data: FeatureCollection<Polygon> | Feature<Polygon>;
+	fillColor: string;
+	fillOpacity: number;
+	show?: boolean;
 }
 
 // Style Types

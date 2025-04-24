@@ -32,7 +32,13 @@
 		// Initialize Cesium viewer
 		const initialOptions = $state.snapshot(viewerOptions);
 
-		viewer = new Viewer(container, initialOptions);
+		// デフォルトの地形を無効化
+		const options = {
+			...initialOptions,
+			terrainProvider: undefined
+		};
+
+		viewer = new Viewer(container, options);
 
 		mapCtx.viewer = viewer;
 

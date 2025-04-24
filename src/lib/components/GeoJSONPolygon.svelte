@@ -1,75 +1,70 @@
 <script lang="ts">
-	import { GeoJsonDataSource, Color } from 'cesium';
+	import { GeoJsonDataSource, Color, ColorMaterialProperty } from 'cesium';
 	import { getMapContext } from '$lib/contexts.svelte';
-	import type { PolygonStyle } from '$lib/types';
-
-	// GeoJSON types
-	interface Polygon {
-		type: 'Polygon';
-		coordinates: Array<Array<[number, number] | [number, number, number]>>;
-	}
-
-	interface Feature<G = any> {
-		type: 'Feature';
-		geometry: G;
-		properties: Record<string, any> | null;
-	}
-
-	interface FeatureCollection<G = any> {
-		type: 'FeatureCollection';
-		features: Array<Feature<G>>;
-	}
+	import { onDestroy, onMount } from 'svelte';
+	import type { GeoJSONPolygonProps } from '$lib/types/geojson';
 
 	// Props
-	let {
-		data = $bindable<FeatureCollection<Polygon> | Feature<Polygon> | null>(null),
-		style = $bindable<PolygonStyle>({
-			fillColor: '#ff0000',
-			fillOpacity: 0.5
-		})
-	} = $props();
+	const {
+		data,
+		fillColor = '#ff0000',
+		fillOpacity = 0.5,
+		show = true
+	}: GeoJSONPolygonProps = $props();
 
 	// Get map context
 	const { viewer } = getMapContext();
 
-	// Create data source
-	const dataSource = new GeoJsonDataSource('polygon-layer');
+	let dataSource = new GeoJsonDataSource();
 
-	// Load and style polygons
-	$effect(() => {
+	onMount(async () => {
 		if (!viewer || !data) return;
 
-		// Filter out non-polygon features
-		const polygonFeatures = {
-			type: 'FeatureCollection',
-			features:
-				'features' in data
-					? data.features.filter((f: Feature<Polygon>) => f.geometry?.type === 'Polygon')
-					: 'geometry' in data && data.geometry?.type === 'Polygon'
-						? [data]
-						: []
-		};
-
-		// Load GeoJSON data
-		dataSource
-			.load(polygonFeatures, {
-				fill: Color.fromCssColorString(style.fillColor || '#ff0000').withAlpha(
-					style.fillOpacity || 0.5
-				),
-				clampToGround: true
-			})
-			.then(() => {
-				viewer.dataSources.add(dataSource);
-			})
-			.catch((error) => {
-				console.error('Failed to load GeoJSON polygon data:', error);
+		try {
+			dataSource = await GeoJsonDataSource.load(data, {
+				clampToGround: true,
+				stroke: Color.fromCssColorString(fillColor),
+				strokeWidth: 2,
+				fill: Color.fromCssColorString(fillColor).withAlpha(fillOpacity)
 			});
 
-		// Cleanup on unmount or data change
-		return () => {
-			if (viewer && !viewer.isDestroyed()) {
-				viewer.dataSources.remove(dataSource);
+			viewer.dataSources.add(dataSource); // Add the data source to the viewer
+		} catch (error) {
+			console.error('Error loading GeoJSON data:', error);
+		}
+	});
+
+	onDestroy(() => {
+		if (viewer && !viewer.isDestroyed()) {
+			viewer.dataSources.remove(dataSource);
+		}
+	});
+
+	$effect(() => {
+		if (!viewer || viewer.isDestroyed() || !dataSource?.entities) return;
+
+		try {
+			// エンティティの表示/非表示を制御
+			dataSource.show = show;
+
+			// 新しいマテリアルを作成
+			const material = new ColorMaterialProperty(
+				Color.fromCssColorString(fillColor).withAlpha(fillOpacity)
+			);
+
+			// 一括更新のためにバッチ処理を使用
+			viewer.entities.suspendEvents();
+			for (const entity of dataSource.entities.values) {
+				if (entity.polygon) {
+					entity.polygon.material = material;
+				}
 			}
-		};
+			viewer.entities.resumeEvents();
+		} catch (error) {
+			console.error(
+				`Error updating polygon style with color [${fillColor}] and opacity [${fillOpacity}]:`,
+				error
+			);
+		}
 	});
 </script>

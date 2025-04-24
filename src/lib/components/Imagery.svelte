@@ -6,11 +6,15 @@
 	const {
 		url,
 		minimumLevel = 0,
-		maximumLevel = 18
+		maximumLevel = 18,
+		opacity = $bindable(1),
+		show = $bindable(true)
 	} = $props<{
 		url: string;
 		minimumLevel?: number;
 		maximumLevel?: number;
+		opacity?: number;
+		show?: boolean;
 	}>();
 
 	// Get map context
@@ -32,6 +36,14 @@
 		});
 
 		// Add layer to viewer
-		viewer.imageryLayers.addImageryProvider(provider);
+		const layer = viewer.imageryLayers.addImageryProvider(provider);
+		if (layer) {
+			$effect(() => {
+				layer.alpha = opacity;
+			});
+			$effect(() => {
+				layer.show = show;
+			});
+		}
 	});
 </script>
